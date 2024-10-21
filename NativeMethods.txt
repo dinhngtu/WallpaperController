@@ -1,0 +1,6 @@
+IDesktopWallpaper
+DesktopWallpaper
+SHParseDisplayName
+SHCreateShellItemArrayFromIDLists
+GetCurrentPackageFullName
+RegisterApplicationRestart
