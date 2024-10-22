@@ -39,6 +39,7 @@ namespace WallpaperController {
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.reloadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,7 +73,6 @@ namespace WallpaperController {
             // presetContextMenuStrip
             // 
             this.presetContextMenuStrip.Name = "presetContextMenuStrip";
-            this.presetContextMenuStrip.OwnerItem = this.presetToolStripMenuItem;
             this.presetContextMenuStrip.Size = new System.Drawing.Size(61, 4);
             this.presetContextMenuStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.presetContextMenuStrip_ItemClicked);
             // 
@@ -81,7 +81,8 @@ namespace WallpaperController {
             this.configFileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configFileNameToolStripMenuItem,
             this.chooseFileToolStripMenuItem,
-            this.editFileToolStripMenuItem});
+            this.editFileToolStripMenuItem,
+            this.reloadPresetsToolStripMenuItem});
             this.configFileToolStripMenuItem.Name = "configFileToolStripMenuItem";
             this.configFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.configFileToolStripMenuItem.Text = "Config &file";
@@ -142,6 +143,13 @@ namespace WallpaperController {
             // 
             this.openFileDialog1.Filter = "Config files|*.json|All files|*.*";
             // 
+            // reloadPresetsToolStripMenuItem
+            // 
+            this.reloadPresetsToolStripMenuItem.Name = "reloadPresetsToolStripMenuItem";
+            this.reloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadPresetsToolStripMenuItem.Text = "&Reload presets";
+            this.reloadPresetsToolStripMenuItem.Click += new System.EventHandler(this.reloadPresetsToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -173,5 +181,6 @@ namespace WallpaperController {
         private System.Windows.Forms.ToolStripMenuItem chooseFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configFileNameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadPresetsToolStripMenuItem;
     }
 }

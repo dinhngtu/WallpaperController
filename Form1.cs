@@ -102,5 +102,9 @@ namespace WallpaperController {
             psi.UseShellExecute = true;
             using var proc = Process.Start(psi);
         }
+
+        private async void reloadPresetsToolStripMenuItem_Click(object sender, EventArgs e) {
+            await ParseConfig();
+        }
     }
 }
