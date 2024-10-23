@@ -31,6 +31,7 @@ namespace WallpaperController {
         static async Task ApplyBackgroundColorPreset(IDesktopWallpaper dw) {
             // if in slideshow, must first change to an existing single wallpaper (that's different from the current one)
             try {
+                // should we disable virtualization on this key to avoid stale reads if we happen to write here?
                 using var wallpaperKey = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Wallpapers");
                 if (wallpaperKey.GetValue("BackgroundType") is int oldBgType && oldBgType == 2) {
                     PWSTR monitorId;
