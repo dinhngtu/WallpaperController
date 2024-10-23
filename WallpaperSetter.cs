@@ -1,3 +1,4 @@
+using Microsoft.Win32;
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -27,12 +28,32 @@ namespace WallpaperController {
             }
         }
 
-        static void ApplyFilePreset(IDesktopWallpaper dw, WallpaperPresetFile presetFile) {
-            unsafe {
-                fixed (char* path = presetFile.FilePath) {
-                    dw.SetWallpaper(null, path);
+        static async Task ApplyBackgroundColorPreset(IDesktopWallpaper dw) {
+            // if in slideshow, must first change to an existing single wallpaper (that's different from the current one)
+            try {
+                using var wallpaperKey = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Wallpapers");
+                if (wallpaperKey.GetValue("BackgroundType") is int oldBgType && oldBgType == 2) {
+                    PWSTR monitorId;
+                    PWSTR wallpaper;
+                    unsafe {
+                        dw.GetMonitorDevicePathAt(0, &monitorId);
+                        dw.GetWallpaper(monitorId, &wallpaper);
+                    }
+                    dw.SetWallpaper(null, wallpaper);
+                    for (int i = 0; i < 5; i++) {
+                        await Task.Delay(100);
+                        if (wallpaperKey.GetValue("BackgroundType") is int newBgType && newBgType != 2) {
+                            break;
+                        }
+                    }
                 }
+            } catch {
             }
+            dw.Enable((BOOL)false);
+        }
+
+        static void ApplyFilePreset(IDesktopWallpaper dw, WallpaperPresetFile presetFile) {
+            dw.SetWallpaper(null, presetFile.FilePath);
         }
 
         static void ApplyPerMonitorFileListPreset(IDesktopWallpaper dw, WallpaperPresetPerMonitorFileList presetPMFileList) {
@@ -91,7 +112,7 @@ namespace WallpaperController {
                 await ApplyPresetOptions(preset, dw);
 
                 if (preset is WallpaperPresetBackgroundColor) {
-                    dw.Enable((BOOL)false);
+                    await ApplyBackgroundColorPreset(dw);
 
                 } else if (preset is WallpaperPresetFile presetFile) {
                     ApplyFilePreset(dw, presetFile);
