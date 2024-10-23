@@ -37,9 +37,17 @@ namespace WallpaperController {
                     PWSTR wallpaper;
                     unsafe {
                         dw.GetMonitorDevicePathAt(0, &monitorId);
-                        dw.GetWallpaper(monitorId, &wallpaper);
+                        try {
+                            dw.GetWallpaper(monitorId, &wallpaper);
+                            try {
+                                dw.SetWallpaper(null, wallpaper);
+                            } finally {
+                                Marshal.FreeCoTaskMem((nint)(void*)wallpaper);
+                            }
+                        } finally {
+                            Marshal.FreeCoTaskMem((nint)(void*)monitorId);
+                        }
                     }
-                    dw.SetWallpaper(null, wallpaper);
                     for (int i = 0; i < 5; i++) {
                         await Task.Delay(100);
                         if (wallpaperKey.GetValue("BackgroundType") is int newBgType && newBgType != 2) {
@@ -62,8 +70,12 @@ namespace WallpaperController {
                 PWSTR monitorId;
                 unsafe {
                     dw.GetMonitorDevicePathAt(i, &monitorId);
-                    fixed (char* path = presetPMFileList.FilePaths[i % presetPMFileList.FilePaths.Length]) {
-                        dw.SetWallpaper(monitorId, path);
+                    try {
+                        fixed (char* path = presetPMFileList.FilePaths[i % presetPMFileList.FilePaths.Length]) {
+                            dw.SetWallpaper(monitorId, path);
+                        }
+                    } finally {
+                        Marshal.FreeCoTaskMem((nint)(void*)monitorId);
                     }
                 }
             }
