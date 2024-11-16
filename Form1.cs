@@ -29,7 +29,7 @@ namespace WallpaperController {
 
         public Form1() {
             InitializeComponent();
-
+            notifyIcon1.Icon = Resources.AppIcon;
             SystemEvents.SessionEnding += SystemEvents_SessionEnding;
         }
 
@@ -105,6 +105,10 @@ namespace WallpaperController {
 
         private async void reloadPresetsToolStripMenuItem_Click(object sender, EventArgs e) {
             await ParseConfig();
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
+            new AboutBox1().ShowDialog(this);
         }
     }
 }
