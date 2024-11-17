@@ -11,7 +11,7 @@ using WallpaperController.Properties;
 using System.Diagnostics;
 
 namespace WallpaperController {
-    public partial class Form1 : Form {
+    partial class Form1 : Form {
 
         private WallpaperSettings? currentConfig = null;
         WallpaperSettings? CurrentConfig {
