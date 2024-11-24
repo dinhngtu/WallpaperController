@@ -1,12 +1,9 @@
-using Microsoft.Win32;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System;
 using System.Windows.Forms;
 using System.IO;
-using Windows.Win32;
-using Windows.Win32.System.Recovery;
 using WallpaperController.Properties;
 using System.Diagnostics;
 
@@ -30,12 +27,6 @@ namespace WallpaperController {
         public Form1() {
             InitializeComponent();
             notifyIcon1.Icon = Resources.AppIcon;
-            SystemEvents.SessionEnding += SystemEvents_SessionEnding;
-        }
-
-        private void SystemEvents_SessionEnding(object sender, SessionEndingEventArgs e) {
-            PInvoke.RegisterApplicationRestart((string?)null, REGISTER_APPLICATION_RESTART_FLAGS.RESTART_NO_REBOOT);
-            Close();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) {

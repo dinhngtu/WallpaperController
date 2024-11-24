@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 
