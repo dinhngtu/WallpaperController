@@ -69,15 +69,15 @@ namespace WallpaperController {
             if (preset == null) {
                 return;
             }
-            await Task.Run(() => WallpaperSetter.ApplyPreset(preset));
+            await Task.Run(() => new WallpaperSetter().ApplyPreset(preset));
         }
 
         private async void nextToolStripMenuItem_Click(object sender, EventArgs e) {
-            await Task.Run(WallpaperSetter.NextWallpaper);
+            await Task.Run(new WallpaperSetter().NextWallpaper);
         }
 
         private async void previousToolStripMenuItem_Click(object sender, EventArgs e) {
-            await Task.Run(WallpaperSetter.PreviousWallpaper);
+            await Task.Run(new WallpaperSetter().PreviousWallpaper);
         }
 
         private async void chooseFileToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -100,6 +100,17 @@ namespace WallpaperController {
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e) {
             new AboutBox1().ShowDialog(this);
+        }
+
+        private void currentContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e) {
+            Clipboard.SetText(e.ClickedItem.Text);
+        }
+
+        private void currentToolStripMenuItem_DropDownOpening(object sender, EventArgs e) {
+            currentContextMenuStrip.Items.Clear();
+            foreach (var wallpaper in new WallpaperSetter().CurrentWallpapers()) {
+                currentContextMenuStrip.Items.Add(wallpaper);
+            }
         }
     }
 }

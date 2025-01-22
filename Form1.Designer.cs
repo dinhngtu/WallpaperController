@@ -36,6 +36,8 @@ namespace WallpaperController {
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.nextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.previousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.currentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.currentContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,11 +59,12 @@ namespace WallpaperController {
             this.toolStripSeparator1,
             this.nextToolStripMenuItem,
             this.previousToolStripMenuItem,
+            this.currentToolStripMenuItem,
             this.toolStripSeparator2,
             this.aboutToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(130, 148);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(130, 170);
             // 
             // presetToolStripMenuItem
             // 
@@ -73,6 +76,7 @@ namespace WallpaperController {
             // presetContextMenuStrip
             // 
             this.presetContextMenuStrip.Name = "presetContextMenuStrip";
+            this.presetContextMenuStrip.OwnerItem = this.presetToolStripMenuItem;
             this.presetContextMenuStrip.Size = new System.Drawing.Size(61, 4);
             this.presetContextMenuStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.presetContextMenuStrip_ItemClicked);
             // 
@@ -134,6 +138,20 @@ namespace WallpaperController {
             this.previousToolStripMenuItem.Text = "&Previous";
             this.previousToolStripMenuItem.Click += new System.EventHandler(this.previousToolStripMenuItem_Click);
             // 
+            // currentToolStripMenuItem
+            // 
+            this.currentToolStripMenuItem.DropDown = this.currentContextMenuStrip;
+            this.currentToolStripMenuItem.Name = "currentToolStripMenuItem";
+            this.currentToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.currentToolStripMenuItem.Text = "&Current";
+            this.currentToolStripMenuItem.DropDownOpening += new System.EventHandler(this.currentToolStripMenuItem_DropDownOpening);
+            // 
+            // currentContextMenuStrip
+            // 
+            this.currentContextMenuStrip.Name = "currentContextMenuStrip";
+            this.currentContextMenuStrip.Size = new System.Drawing.Size(181, 26);
+            this.currentContextMenuStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.currentContextMenuStrip_ItemClicked);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -190,5 +208,7 @@ namespace WallpaperController {
         private System.Windows.Forms.ToolStripMenuItem configFileNameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadPresetsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem currentToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip currentContextMenuStrip;
     }
 }

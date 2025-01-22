@@ -1,5 +1,6 @@
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -11,10 +12,15 @@ using Windows.Win32.System.SystemServices;
 using Windows.Win32.UI.Shell;
 
 namespace WallpaperController {
-    internal static class WallpaperSetter {
+    internal class WallpaperSetter {
         static readonly Lazy<string?> PackageContext = new(() => Utils.GetCurrentPackageFullName());
+        readonly IDesktopWallpaper dw;
 
-        static async Task ApplyPresetOptions(WallpaperPresetBase preset, IDesktopWallpaper dw) {
+        public WallpaperSetter() {
+            dw = (IDesktopWallpaper)new DesktopWallpaper();
+        }
+
+        async Task ApplyPresetOptions(WallpaperPresetBase preset) {
             if (preset.BackgroundColor != null) {
                 var bg = ColorTranslator.FromHtml(preset.BackgroundColor);
                 dw.SetBackgroundColor(new COLORREF(((uint)bg.B << 24) | ((uint)bg.G << 16) | (uint)bg.R));
@@ -28,7 +34,7 @@ namespace WallpaperController {
             }
         }
 
-        static async Task ApplyBackgroundColorPreset(IDesktopWallpaper dw) {
+        async Task ApplyBackgroundColorPreset() {
             // if in slideshow, must first change to an existing single wallpaper (that's different from the current one)
             try {
                 // should we disable virtualization on this key to avoid stale reads if we happen to write here?
@@ -61,11 +67,38 @@ namespace WallpaperController {
             dw.Enable((BOOL)false);
         }
 
-        static void ApplyFilePreset(IDesktopWallpaper dw, WallpaperPresetFile presetFile) {
+        void ApplyFilePreset(WallpaperPresetFile presetFile) {
             dw.SetWallpaper(null, presetFile.FilePath);
         }
 
-        static void ApplyPerMonitorFileListPreset(IDesktopWallpaper dw, WallpaperPresetPerMonitorFileList presetPMFileList) {
+        string GetMonitorDevicePathAt(uint i) {
+            PWSTR monitorId;
+            unsafe {
+                dw.GetMonitorDevicePathAt(i, &monitorId);
+                try {
+                    return monitorId.ToString();
+                } finally {
+                    Marshal.FreeCoTaskMem((nint)(void*)monitorId);
+                }
+            }
+        }
+
+        IEnumerable<string> GetMonitorDevicePaths(bool attachedOnly = true) {
+            dw.GetMonitorDevicePathCount(out var monitorCount);
+            for (uint i = 0; i < monitorCount; i++) {
+                var monitorId = GetMonitorDevicePathAt(i);
+                if (attachedOnly) {
+                    try {
+                        dw.GetMonitorRECT(monitorId, out var rect);
+                    } catch (COMException) {
+                        continue;
+                    }
+                }
+                yield return monitorId;
+            }
+        }
+
+        void ApplyPerMonitorFileListPreset(WallpaperPresetPerMonitorFileList presetPMFileList) {
             dw.GetMonitorDevicePathCount(out var monitorCount);
             for (uint i = 0; i < monitorCount; i++) {
                 PWSTR monitorId;
@@ -82,7 +115,7 @@ namespace WallpaperController {
             }
         }
 
-        static void ApplySlideshowOptions(IDesktopWallpaper dw, WallpaperPresetSlideshow presetSlideshow) {
+        void ApplySlideshowOptions(WallpaperPresetSlideshow presetSlideshow) {
             if (presetSlideshow.SlideshowOptions != null) {
                 DESKTOP_SLIDESHOW_OPTIONS options = 0;
                 if (presetSlideshow.SlideshowOptions.ShuffleImages) {
@@ -93,7 +126,7 @@ namespace WallpaperController {
             }
         }
 
-        static void ApplySlideshowDirectoryPreset(IDesktopWallpaper dw, WallpaperPresetSlideshowDirectory presetSlideshowDirectory) {
+        void ApplySlideshowDirectoryPreset(WallpaperPresetSlideshowDirectory presetSlideshowDirectory) {
             unsafe {
                 var hr = PInvoke.SHParseDisplayName(
                     presetSlideshowDirectory.SlideshowDirectoryPath,
@@ -117,36 +150,30 @@ namespace WallpaperController {
             }
         }
 
-        public static async Task ApplyPreset(WallpaperPresetBase preset) {
-            if (new DesktopWallpaper() is not IDesktopWallpaper dw) {
-                return;
-            }
+        public async Task ApplyPreset(WallpaperPresetBase preset) {
             try {
-                await ApplyPresetOptions(preset, dw);
+                await ApplyPresetOptions(preset);
 
                 if (preset is WallpaperPresetBackgroundColor) {
-                    await ApplyBackgroundColorPreset(dw);
+                    await ApplyBackgroundColorPreset();
 
                 } else if (preset is WallpaperPresetFile presetFile) {
-                    ApplyFilePreset(dw, presetFile);
+                    ApplyFilePreset(presetFile);
 
                 } else if (preset is WallpaperPresetPerMonitorFileList presetPMFileList) {
-                    ApplyPerMonitorFileListPreset(dw, presetPMFileList);
+                    ApplyPerMonitorFileListPreset(presetPMFileList);
 
                 } else if (preset is WallpaperPresetSlideshow presetSlideshow) {
-                    ApplySlideshowOptions(dw, presetSlideshow);
+                    ApplySlideshowOptions(presetSlideshow);
                     if (presetSlideshow is WallpaperPresetSlideshowDirectory presetSlideshowDirectory) {
-                        ApplySlideshowDirectoryPreset(dw, presetSlideshowDirectory);
+                        ApplySlideshowDirectoryPreset(presetSlideshowDirectory);
                     }
                 }
             } catch (COMException) {
             }
         }
 
-        public static void NextWallpaper() {
-            if (new DesktopWallpaper() is not IDesktopWallpaper dw) {
-                return;
-            }
+        public void NextWallpaper() {
             try {
                 dw.AdvanceSlideshow(null, DESKTOP_SLIDESHOW_DIRECTION.DSD_FORWARD);
             } catch (COMException) {
@@ -154,15 +181,24 @@ namespace WallpaperController {
             }
         }
 
-        public static void PreviousWallpaper() {
-            if (new DesktopWallpaper() is not IDesktopWallpaper dw) {
-                return;
-            }
+        public void PreviousWallpaper() {
             try {
                 dw.AdvanceSlideshow(null, DESKTOP_SLIDESHOW_DIRECTION.DSD_BACKWARD);
             } catch (COMException) {
             } catch (NotImplementedException) {
             }
+        }
+
+        public List<string> CurrentWallpapers() {
+            var ret = new List<string>();
+            foreach (var monitorId in GetMonitorDevicePaths()) {
+                dw.GetWallpaper(monitorId.ToString(), out var wallpaper);
+                ret.Add(wallpaper.ToString());
+                unsafe {
+                    Marshal.FreeCoTaskMem((nint)(void*)wallpaper);
+                }
+            }
+            return ret;
         }
     }
 }
