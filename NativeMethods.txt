@@ -1,6 +1,7 @@
-IDesktopWallpaper
 DesktopWallpaper
-SHParseDisplayName
-SHCreateShellItemArrayFromIDLists
 GetCurrentPackageFullName
+IDesktopWallpaper
 RegisterApplicationRestart
+SHCreateShellItemArrayFromIDLists
+SHOpenFolderAndSelectItems
+SHParseDisplayName

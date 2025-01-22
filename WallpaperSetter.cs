@@ -13,7 +13,6 @@ using Windows.Win32.UI.Shell;
 
 namespace WallpaperController {
     internal class WallpaperSetter {
-        static readonly Lazy<string?> PackageContext = new(() => Utils.GetCurrentPackageFullName());
         readonly IDesktopWallpaper dw;
 
         public WallpaperSetter() {
@@ -28,7 +27,7 @@ namespace WallpaperController {
             if (preset.Position != null) {
                 dw.SetPosition(preset.Position.Value);
             }
-            if (preset.LockScreenImage != null && PackageContext.Value != null) {
+            if (preset.LockScreenImage != null && NativeMethods.PackageContext.Value != null) {
                 var imageFile = await StorageFile.GetFileFromPathAsync(preset.LockScreenImage);
                 await LockScreen.SetImageFileAsync(imageFile);
             }
@@ -193,9 +192,12 @@ namespace WallpaperController {
             var ret = new List<string>();
             foreach (var monitorId in GetMonitorDevicePaths()) {
                 dw.GetWallpaper(monitorId.ToString(), out var wallpaper);
-                ret.Add(wallpaper.ToString());
-                unsafe {
-                    Marshal.FreeCoTaskMem((nint)(void*)wallpaper);
+                try {
+                    ret.Add(wallpaper.ToString());
+                } finally {
+                    unsafe {
+                        Marshal.FreeCoTaskMem((nint)(void*)wallpaper);
+                    }
                 }
             }
             return ret;
