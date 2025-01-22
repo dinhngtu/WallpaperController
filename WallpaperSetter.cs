@@ -35,33 +35,30 @@ namespace WallpaperController {
 
         async Task ApplyBackgroundColorPreset() {
             // if in slideshow, must first change to an existing single wallpaper (that's different from the current one)
-            try {
-                // should we disable virtualization on this key to avoid stale reads if we happen to write here?
-                using var wallpaperKey = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Wallpapers");
-                if (wallpaperKey.GetValue("BackgroundType") is int oldBgType && oldBgType == 2) {
-                    PWSTR monitorId;
-                    PWSTR wallpaper;
-                    unsafe {
-                        dw.GetMonitorDevicePathAt(0, &monitorId);
+            // should we disable virtualization on this key to avoid stale reads if we happen to write here?
+            using var wallpaperKey = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Wallpapers");
+            if (wallpaperKey.GetValue("BackgroundType") is int oldBgType && oldBgType == 2) {
+                PWSTR monitorId;
+                PWSTR wallpaper;
+                unsafe {
+                    dw.GetMonitorDevicePathAt(0, &monitorId);
+                    try {
+                        dw.GetWallpaper(monitorId, &wallpaper);
                         try {
-                            dw.GetWallpaper(monitorId, &wallpaper);
-                            try {
-                                dw.SetWallpaper(null, wallpaper);
-                            } finally {
-                                Marshal.FreeCoTaskMem((nint)(void*)wallpaper);
-                            }
+                            dw.SetWallpaper(null, wallpaper);
                         } finally {
-                            Marshal.FreeCoTaskMem((nint)(void*)monitorId);
+                            Marshal.FreeCoTaskMem((nint)(void*)wallpaper);
                         }
-                    }
-                    for (int i = 0; i < 5; i++) {
-                        await Task.Delay(100);
-                        if (wallpaperKey.GetValue("BackgroundType") is int newBgType && newBgType != 2) {
-                            break;
-                        }
+                    } finally {
+                        Marshal.FreeCoTaskMem((nint)(void*)monitorId);
                     }
                 }
-            } catch {
+                for (int i = 0; i < 5; i++) {
+                    await Task.Delay(100);
+                    if (wallpaperKey.GetValue("BackgroundType") is int newBgType && newBgType != 2) {
+                        break;
+                    }
+                }
             }
             dw.Enable((BOOL)false);
         }
@@ -190,15 +187,19 @@ namespace WallpaperController {
 
         public List<string> CurrentWallpapers() {
             var ret = new List<string>();
-            foreach (var monitorId in GetMonitorDevicePaths()) {
-                dw.GetWallpaper(monitorId.ToString(), out var wallpaper);
-                try {
-                    ret.Add(wallpaper.ToString());
-                } finally {
-                    unsafe {
-                        Marshal.FreeCoTaskMem((nint)(void*)wallpaper);
+            try {
+                foreach (var monitorId in GetMonitorDevicePaths()) {
+                    dw.GetWallpaper(monitorId.ToString(), out var wallpaper);
+                    try {
+                        ret.Add(wallpaper.ToString());
+                    } finally {
+                        unsafe {
+                            Marshal.FreeCoTaskMem((nint)(void*)wallpaper);
+                        }
                     }
                 }
+            } catch {
+                ret.Clear();
             }
             return ret;
         }

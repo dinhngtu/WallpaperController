@@ -60,7 +60,7 @@ namespace WallpaperController {
             }
         }
 
-        private async void presetContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e) {
+        private void presetContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e) {
             var presetName = e?.ClickedItem?.Text;
             if (presetName is null) {
                 return;
@@ -69,15 +69,15 @@ namespace WallpaperController {
             if (preset == null) {
                 return;
             }
-            await Task.Run(() => new WallpaperSetter().ApplyPreset(preset));
+            Task.Run(() => new WallpaperSetter().ApplyPreset(preset));
         }
 
-        private async void nextToolStripMenuItem_Click(object sender, EventArgs e) {
-            await Task.Run(new WallpaperSetter().NextWallpaper);
+        private void nextToolStripMenuItem_Click(object sender, EventArgs e) {
+            Task.Run(new WallpaperSetter().NextWallpaper);
         }
 
-        private async void previousToolStripMenuItem_Click(object sender, EventArgs e) {
-            await Task.Run(new WallpaperSetter().PreviousWallpaper);
+        private void previousToolStripMenuItem_Click(object sender, EventArgs e) {
+            Task.Run(new WallpaperSetter().PreviousWallpaper);
         }
 
         private async void chooseFileToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -89,9 +89,13 @@ namespace WallpaperController {
         }
 
         private void editFileToolStripMenuItem_Click(object sender, EventArgs e) {
-            var psi = new ProcessStartInfo(Settings.Default.ConfigPath);
-            psi.UseShellExecute = true;
-            using var proc = Process.Start(psi);
+            try {
+                var psi = new ProcessStartInfo(Settings.Default.ConfigPath) {
+                    UseShellExecute = true
+                };
+                using var proc = Process.Start(psi);
+            } catch {
+            }
         }
 
         private async void reloadPresetsToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -103,7 +107,7 @@ namespace WallpaperController {
         }
 
         private void currentContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e) {
-            NativeMethods.RevealPath(e.ClickedItem.Text);
+            Task.Run(() => NativeMethods.RevealPath(e.ClickedItem.Text));
         }
 
         private void currentToolStripMenuItem_DropDownOpening(object sender, EventArgs e) {
