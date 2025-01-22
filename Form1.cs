@@ -107,7 +107,9 @@ namespace WallpaperController {
         }
 
         private void currentContextMenuStrip_ItemClicked(object sender, ToolStripItemClickedEventArgs e) {
-            Task.Run(() => NativeMethods.RevealPath(e.ClickedItem.Text));
+            if (!string.IsNullOrEmpty(e.ClickedItem.Text)) {
+                Task.Run(() => NativeMethods.RevealPath(e.ClickedItem.Text));
+            }
         }
 
         private void currentToolStripMenuItem_DropDownOpening(object sender, EventArgs e) {
