@@ -35,14 +35,14 @@ namespace WallpaperController {
 
         private async void Form1_Load(object sender, EventArgs e) {
             Settings.Default.Upgrade();
-            if (string.IsNullOrEmpty(Settings.Default.ConfigPath)) {
-                return;
-            }
             await ParseConfig();
         }
 
         private async Task ParseConfig() {
             configFileNameToolStripMenuItem.Text = Settings.Default.ConfigPath;
+            if (string.IsNullOrEmpty(Settings.Default.ConfigPath)) {
+                return;
+            }
             try {
                 using var configStream = File.OpenRead(Settings.Default.ConfigPath!);
                 var parsedSettings = await JsonSerializer.DeserializeAsync<WallpaperSettings>(configStream);
