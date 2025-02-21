@@ -1,7 +1,15 @@
 using System.Text.Json.Serialization;
-using Windows.Win32.UI.Shell;
 
 namespace WallpaperController {
+    internal enum DesktopWallpaperPosition {
+        Center = 0,
+        Tile = 1,
+        Stretch = 2,
+        Fit = 3,
+        Fill = 4,
+        Span = 5,
+    }
+
     [JsonDerivedType(typeof(WallpaperPresetBackgroundColor), "BackgroundColor")]
     [JsonDerivedType(typeof(WallpaperPresetFile), "File")]
     [JsonDerivedType(typeof(WallpaperPresetPerMonitorFileList), "PerMonitorFileList")]
@@ -11,7 +19,7 @@ namespace WallpaperController {
         [JsonRequired]
         public string PresetName { get; set; }
         public string? BackgroundColor { get; set; }
-        public DESKTOP_WALLPAPER_POSITION? Position { get; set; }
+        public DesktopWallpaperPosition? Position { get; set; }
         public string? LockScreenImage { get; set; }
     }
 
@@ -37,13 +45,15 @@ namespace WallpaperController {
         public WallpaperPresetSlideshowOptions? SlideshowOptions { get; set; }
     }
 
+    /*
     internal class WallpaperPresetSlideshowFileList : WallpaperPresetSlideshow {
         [JsonRequired]
         public string[] SlideshowFilePaths { get; set; }
     }
+    */
 
     internal class WallpaperPresetSlideshowDirectory : WallpaperPresetSlideshow {
         [JsonRequired]
-        public  string SlideshowDirectoryPath { get; set; }
+        public string SlideshowDirectoryPath { get; set; }
     }
 }

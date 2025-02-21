@@ -25,7 +25,7 @@ namespace WallpaperController {
                 dw.SetBackgroundColor(new COLORREF(((uint)bg.B << 24) | ((uint)bg.G << 16) | (uint)bg.R));
             }
             if (preset.Position != null) {
-                dw.SetPosition(preset.Position.Value);
+                dw.SetPosition((DESKTOP_WALLPAPER_POSITION)preset.Position.Value);
             }
             if (preset.LockScreenImage != null && NativeMethods.PackageContext.Value != null) {
                 var imageFile = await StorageFile.GetFileFromPathAsync(preset.LockScreenImage);
