@@ -19,11 +19,7 @@ namespace WallpaperController {
                 return null;
             }
             var buf = new char[length];
-            unsafe {
-                fixed (char* ptr = buf) {
-                    err = PInvoke.GetCurrentPackageFullName(ref length, ptr);
-                }
-            }
+            err = PInvoke.GetCurrentPackageFullName(ref length, buf.AsSpan());
             if (err == WIN32_ERROR.ERROR_SUCCESS) {
                 return new string(buf, 0, (int)length - 1);
             } else if (err == WIN32_ERROR.APPMODEL_ERROR_NO_PACKAGE) {
