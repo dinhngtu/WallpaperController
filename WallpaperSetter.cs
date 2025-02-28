@@ -27,7 +27,7 @@ namespace WallpaperController {
             if (preset.Position != null) {
                 dw.SetPosition((DESKTOP_WALLPAPER_POSITION)preset.Position.Value);
             }
-            if (preset.LockScreenImage != null && NativeMethods.PackageContext.Value != null) {
+            if (preset.LockScreenImage != null && SystemUtils.PackageContext.Value != null) {
                 var imageFile = await StorageFile.GetFileFromPathAsync(preset.LockScreenImage);
                 await LockScreen.SetImageFileAsync(imageFile);
             }

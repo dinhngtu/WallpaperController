@@ -5,7 +5,7 @@ using Windows.Win32.Foundation;
 using Windows.Win32.System.SystemServices;
 
 namespace WallpaperController {
-    internal static class NativeMethods {
+    internal static class SystemUtils {
         public static string? GetCurrentPackageFullName() {
             // https://github.com/microsoft/Windows-AppConsult-Tools-DesktopBridgeHelpers/blob/master/DesktopBridge.Helpers/Helpers.cs
             if (Environment.OSVersion.Version < new Version(6, 2, 0, 0)) {
