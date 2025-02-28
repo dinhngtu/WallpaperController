@@ -5,3 +5,9 @@ RegisterApplicationRestart
 SHCreateShellItemArrayFromIDLists
 SHOpenFolderAndSelectItems
 SHParseDisplayName
+WM_ACTIVATE
+ShowWindow
+SHOW_WINDOW_CMD
+SetWindowSubclass
+DefSubclassProc
+RemoveWindowSubclass

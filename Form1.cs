@@ -6,6 +6,10 @@ using System.Windows.Forms;
 using System.IO;
 using WallpaperController.Properties;
 using System.Diagnostics;
+using System.Reflection;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace WallpaperController {
     partial class Form1 : Form {
@@ -33,9 +37,39 @@ namespace WallpaperController {
             Close();
         }
 
+        private NativeWindow? GetNotifyWindow() {
+            return notifyIcon1.GetType().GetField("window", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(notifyIcon1) as NativeWindow;
+        }
+
+        private LRESULT MyNotifyIconSubclassProc(HWND hWnd, uint uMsg, WPARAM wParam, LPARAM lParam, nuint uIdSubclass, nuint dwRefData) {
+            if (uMsg == PInvoke.WM_ACTIVATE) {
+                PInvoke.ShowWindow(hWnd, SHOW_WINDOW_CMD.SW_HIDE);
+            }
+            return PInvoke.DefSubclassProc(hWnd, uMsg, wParam, lParam);
+        }
+
+        private void HookNotifyIcon() {
+            var notifyWindow = GetNotifyWindow();
+            if (notifyWindow == null) {
+                return;
+            }
+            PInvoke.SetWindowSubclass((HWND)notifyWindow.Handle, MyNotifyIconSubclassProc, UIntPtr.Zero, UIntPtr.Zero);
+        }
+
+        /*
+        private void UnhookNotifyIcon() {
+            var notifyWindow = GetNotifyWindow();
+            if (notifyWindow == null) {
+                return;
+            }
+            PInvoke.RemoveWindowSubclass((HWND)notifyWindow.Handle, MyNotifyIconSubclassProc, UIntPtr.Zero);
+        }
+        */
+
         private async void Form1_Load(object sender, EventArgs e) {
             Settings.Default.Upgrade();
             await ParseConfig();
+            HookNotifyIcon();
         }
 
         private async Task ParseConfig() {
