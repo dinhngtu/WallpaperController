@@ -155,7 +155,7 @@ namespace WallpaperController {
 
         private void currentToolStripMenuItem_DropDownOpening(object sender, EventArgs e) {
             currentContextMenuStrip.Items.Clear();
-            foreach (var wallpaper in new WallpaperSetter().CurrentWallpapers()) {
+            foreach (var wallpaper in wallpaperSetter.CurrentWallpapers()) {
                 currentContextMenuStrip.Items.Add(wallpaper);
             }
         }

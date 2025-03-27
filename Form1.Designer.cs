@@ -149,7 +149,8 @@ namespace WallpaperController {
             // currentContextMenuStrip
             // 
             this.currentContextMenuStrip.Name = "currentContextMenuStrip";
-            this.currentContextMenuStrip.Size = new System.Drawing.Size(181, 26);
+            this.currentContextMenuStrip.OwnerItem = this.currentToolStripMenuItem;
+            this.currentContextMenuStrip.Size = new System.Drawing.Size(61, 4);
             this.currentContextMenuStrip.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.currentContextMenuStrip_ItemClicked);
             // 
             // toolStripSeparator2

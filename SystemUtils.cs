@@ -30,7 +30,7 @@ namespace WallpaperController {
             }
         }
 
-        public static readonly Lazy<string?> PackageContext = new(() => GetCurrentPackageFullName());
+        public static readonly Lazy<string?> PackageContext = new(GetCurrentPackageFullName);
 
         public static void RevealPath(string path) {
             try {
