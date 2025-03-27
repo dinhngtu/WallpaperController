@@ -1,4 +1,4 @@
-﻿namespace WallpaperController {
+namespace WallpaperController {
     partial class AboutBox1 {
         /// <summary>
         /// Required designer variable.
@@ -24,10 +24,14 @@
         private void InitializeComponent() {
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.okButton = new System.Windows.Forms.Button();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.tableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel
@@ -36,8 +40,8 @@
             this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 72F));
             this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel.Controls.Add(this.okButton, 1, 1);
-            this.tableLayoutPanel.Controls.Add(this.linkLabel1, 1, 0);
             this.tableLayoutPanel.Controls.Add(this.pictureBox1, 0, 0);
+            this.tableLayoutPanel.Controls.Add(this.flowLayoutPanel1, 1, 0);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel.Location = new System.Drawing.Point(9, 9);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
@@ -57,18 +61,6 @@
             this.okButton.TabIndex = 24;
             this.okButton.Text = "OK";
             // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
-            this.linkLabel1.Location = new System.Drawing.Point(75, 0);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Padding = new System.Windows.Forms.Padding(0, 8, 0, 0);
-            this.linkLabel1.Size = new System.Drawing.Size(55, 21);
-            this.linkLabel1.TabIndex = 26;
-            this.linkLabel1.Text = "linkLabel1";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -77,6 +69,49 @@
             this.pictureBox1.Size = new System.Drawing.Size(66, 88);
             this.pictureBox1.TabIndex = 27;
             this.pictureBox1.TabStop = false;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.label1);
+            this.flowLayoutPanel1.Controls.Add(this.label2);
+            this.flowLayoutPanel1.Controls.Add(this.linkLabel1);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(75, 3);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(138, 88);
+            this.flowLayoutPanel1.TabIndex = 28;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 8);
+            this.label1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(102, 13);
+            this.label1.TabIndex = 28;
+            this.label1.Text = "Wallpaper Controller";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 29);
+            this.label2.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "label2";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.LinkArea = new System.Windows.Forms.LinkArea(0, 0);
+            this.linkLabel1.Location = new System.Drawing.Point(3, 50);
+            this.linkLabel1.Margin = new System.Windows.Forms.Padding(3, 8, 3, 0);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(55, 13);
+            this.linkLabel1.TabIndex = 27;
+            this.linkLabel1.Text = "linkLabel1";
             // 
             // AboutBox1
             // 
@@ -96,8 +131,9 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Wallpaper Controller";
             this.tableLayoutPanel.ResumeLayout(false);
-            this.tableLayoutPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -106,7 +142,10 @@
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel;
         private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label2;
     }
 }

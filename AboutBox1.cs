@@ -10,6 +10,12 @@ namespace WallpaperController {
             InitializeComponent();
             var logoSize = Math.Min(pictureBox1.Width, pictureBox1.Height);
             pictureBox1.Image = new Icon(Resources.AppIcon, new Size(logoSize, logoSize)).ToBitmap();
+            var version = SystemUtils.GetCurrentPackage()?.Id?.Version;
+            if (version != null) {
+                label2.Text = $"{version.Value.Major}.{version.Value.Minor}.{version.Value.Build}.{version.Value.Revision}";
+            } else {
+                label2.Text = "";
+            }
             linkLabel1.Text = "Icons by Icons8";
             linkLabel1.Links.Add(9, 6, "https://icons8.com");
         }

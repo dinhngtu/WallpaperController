@@ -1,5 +1,4 @@
 DesktopWallpaper
-GetCurrentPackageFullName
 IDesktopWallpaper
 RegisterApplicationRestart
 SHCreateShellItemArrayFromIDLists
