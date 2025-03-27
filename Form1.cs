@@ -10,11 +10,15 @@ using System.Reflection;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
+using Windows.Win32.UI.Shell;
 
 namespace WallpaperController {
     partial class Form1 : Form {
 
         private WallpaperSettings? currentConfig = null;
+        private readonly WallpaperSetter wallpaperSetter = new();
+        private readonly SUBCLASSPROC notifyIconDelegate;
+
         WallpaperSettings? CurrentConfig {
             get => currentConfig;
             set {
@@ -31,6 +35,7 @@ namespace WallpaperController {
         public Form1() {
             InitializeComponent();
             notifyIcon1.Icon = Resources.AppIcon;
+            notifyIconDelegate = new SUBCLASSPROC(MyNotifyIconSubclassProc);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -53,23 +58,25 @@ namespace WallpaperController {
             if (notifyWindow == null) {
                 return;
             }
-            PInvoke.SetWindowSubclass((HWND)notifyWindow.Handle, MyNotifyIconSubclassProc, UIntPtr.Zero, UIntPtr.Zero);
+            PInvoke.SetWindowSubclass((HWND)notifyWindow.Handle, notifyIconDelegate, UIntPtr.Zero, UIntPtr.Zero);
         }
 
-        /*
         private void UnhookNotifyIcon() {
             var notifyWindow = GetNotifyWindow();
             if (notifyWindow == null) {
                 return;
             }
-            PInvoke.RemoveWindowSubclass((HWND)notifyWindow.Handle, MyNotifyIconSubclassProc, UIntPtr.Zero);
+            PInvoke.RemoveWindowSubclass((HWND)notifyWindow.Handle, notifyIconDelegate, UIntPtr.Zero);
         }
-        */
 
         private async void Form1_Load(object sender, EventArgs e) {
             Settings.Default.Upgrade();
             await ParseConfig();
             HookNotifyIcon();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
+            UnhookNotifyIcon();
         }
 
         private async Task ParseConfig() {
